@@ -1,95 +1,197 @@
-// ================================
-// MOBILE MENU
-// ================================
+/* =========================================
+   MOBILE NAVIGATION
+========================================= */
 
-const menuBtn = document.getElementById("menuBtn");
-const navLinks = document.getElementById("navLinks");
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
+
+const navLinks = document.querySelectorAll(".nav-link");
 
 
-// Open / close mobile menu
-menuBtn.addEventListener("click", function () {
+menuToggle.addEventListener("click", () => {
 
-    navLinks.classList.toggle("show");
+    navMenu.classList.toggle("show");
+
+    menuToggle.classList.toggle("open");
 
 });
 
 
-// Close menu after clicking a navigation link
+/* Close mobile menu when clicking a link */
 
-const links = document.querySelectorAll(".nav-links a");
+navLinks.forEach((link) => {
 
-links.forEach(function (link) {
+    link.addEventListener("click", () => {
 
-    link.addEventListener("click", function () {
+        navMenu.classList.remove("show");
 
-        navLinks.classList.remove("show");
+        menuToggle.classList.remove("open");
 
     });
 
 });
 
 
-// ================================
-// ACTIVE NAVIGATION LINK
-// ================================
 
-const sections = document.querySelectorAll("section");
-const navItems = document.querySelectorAll(".nav-links a");
+/* =========================================
+   ACTIVE NAVIGATION
+========================================= */
+
+const sections = document.querySelectorAll("section[id]");
 
 
-window.addEventListener("scroll", function () {
+function updateActiveNavigation() {
 
     let currentSection = "";
 
-    sections.forEach(function (section) {
+    sections.forEach((section) => {
 
-        const sectionTop = section.offsetTop - 150;
-        const sectionHeight = section.clientHeight;
+        const sectionTop =
+            section.offsetTop - 180;
+
+        const sectionHeight =
+            section.offsetHeight;
 
         if (
             window.scrollY >= sectionTop &&
             window.scrollY < sectionTop + sectionHeight
         ) {
 
-            currentSection = section.getAttribute("id");
+            currentSection =
+                section.getAttribute("id");
 
         }
 
     });
 
 
-    navItems.forEach(function (item) {
+    navLinks.forEach((link) => {
 
-        item.classList.remove("active");
+        link.classList.remove("active");
 
-        if (item.getAttribute("href") === "#" + currentSection) {
+        const linkTarget =
+            link.getAttribute("href");
 
-            item.classList.add("active");
+        if (
+            linkTarget === "#" + currentSection
+        ) {
+
+            link.classList.add("active");
 
         }
 
     });
 
-});
+}
 
 
-// ================================
-// CONTACT FORM
-// ================================
+window.addEventListener(
+    "scroll",
+    updateActiveNavigation
+);
 
-const contactForm = document.getElementById("contactForm");
 
 
-contactForm.addEventListener("submit", function (event) {
+/* =========================================
+   SCROLL REVEAL ANIMATION
+========================================= */
 
-    event.preventDefault();
+const revealElements =
+    document.querySelectorAll(".reveal");
 
-    const name = document.getElementById("name").value;
 
-    alert(
-        "Thank you, " + name + "! Your message has been received."
+const revealObserver =
+    new IntersectionObserver(
+
+        (entries) => {
+
+            entries.forEach((entry) => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add(
+                        "visible"
+                    );
+
+                    revealObserver.unobserve(
+                        entry.target
+                    );
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold: 0.12
+        }
+
     );
 
-    contactForm.reset();
+
+revealElements.forEach((element) => {
+
+    revealObserver.observe(element);
 
 });
+
+
+
+/* =========================================
+   CONTACT FORM
+========================================= */
+
+const contactForm =
+    document.getElementById("contactForm");
+
+
+contactForm.addEventListener(
+    "submit",
+    (event) => {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById("name").value;
+
+
+        alert(
+            `Thanks, ${name}! Your message has been received.`
+        );
+
+
+        contactForm.reset();
+
+    }
+);
+
+
+
+/* =========================================
+   NAVBAR BACKGROUND ON SCROLL
+========================================= */
+
+const navbar =
+    document.querySelector(".navbar");
+
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        if (window.scrollY > 30) {
+
+            navbar.style.background =
+                "rgba(5, 8, 13, 0.88)";
+
+        } else {
+
+            navbar.style.background =
+                "rgba(8, 11, 17, 0.65)";
+
+        }
+
+    }
+);
